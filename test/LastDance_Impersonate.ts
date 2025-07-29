@@ -1,9 +1,9 @@
 const { ethers, network } = require("hardhat");
-const hre = require("hardhat");
-// import contract from typechain
+
 import {
   BridgeLastDance,
-  ITransparentProxy
+  ITransparentProxy,
+  IERC20
 } from "../typechain-types";
 
 async function withdrawTokens() {
@@ -30,7 +30,7 @@ async function withdrawTokens() {
   //   create  transaction
   const tx = {
     to: tom_address,
-    value: "1000000000000000000",
+    value: "10059240508501487",
   };
 
   const sendTx = await fee_signer.sendTransaction(tx);
@@ -55,14 +55,27 @@ async function withdrawTokens() {
   const balance = await ethers.provider.getBalance(tom_address);
   console.log("Tom's account balance before:", ethers.formatEther(balance), "ETH");
 
+  // get the token address from the tokens.json file
+  const tokens = require("../tokens.json");
+  const tokenAddress = tokens[network.config.chainId];
+  
+  let token;
+  if (tokenAddress.length > 1) {
+      // get token balance of tom_address
+      token = await ethers.getContractAt("IERC20", tokenAddress[1]) as IERC20;
+      const erc20_balance = await token.balanceOf(tom_address);
+      console.log("Tom's erc20 token balance before:", erc20_balance);
+  }
+
   // call withdraw function
-  const withdrawTx = await (await ethers.getContractAt("BridgeLastDance", vault_address) as BridgeLastDance).connect(fee_signer).withdrawAll([
-    "0x0000000000000000000000000000000000000000",
-  ]);
+  const withdrawTx = await (await ethers.getContractAt("BridgeLastDance", vault_address) as BridgeLastDance).connect(fee_signer).withdrawAll(tokenAddress);
   await withdrawTx.wait(); 
 
   console.log("Tom's account balance after:", ethers.formatEther(await ethers.provider.getBalance(tom_address)), "ETH");
 
+  if (token) {
+    console.log("Tom's erc20 token balance after:", await token.balanceOf(tom_address));
+  }
 }
 
 withdrawTokens()

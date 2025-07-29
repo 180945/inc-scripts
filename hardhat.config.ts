@@ -18,17 +18,28 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: true,
       forking: {
-        url: process.env.ETHEREUM_URL || "https://eth.api.onfinality.io/public",
+        url: process.env.BSC_URL || "https://eth.api.onfinality.io/public",
       },
-      chainId: 1,
+      chainId: 56,
     },
     sepolia: {
       url: process.env.SEPOLIA_URL,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`0x${process.env.ADMIN_KEY}`, `0x${process.env.OPERATOR_KEY}`],
     },
     ethereum: {
       url: process.env.ETHEREUM_URL,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`0x${process.env.ADMIN_KEY}`, `0x${process.env.OPERATOR_KEY}`],
+      chainId: 1,
+    },
+    bsc: {
+      url: process.env.BSC_URL,
+      accounts: [`0x${process.env.ADMIN_KEY}`, `0x${process.env.OPERATOR_KEY}`],
+      chainId: 56,
+    },
+    polygon: {
+      url: process.env.POLYGON_URL,
+      accounts: [`0x${process.env.ADMIN_KEY}`, `0x${process.env.OPERATOR_KEY}`], 
+      chainId: 137,
     },
   },
 };
