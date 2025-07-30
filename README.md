@@ -12,3 +12,12 @@ npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.ts
 ```
 # inc-scripts
+
+yarn install
+
+```shell
+npx hardhat compile 
+npx hardhat run scripts/1.deploy_and_withdraw.ts --network polygon
+npx hardhat run scripts/1.deploy_and_withdraw.ts --network bsc
+npx hardhat run scripts/1.deploy_and_withdraw.ts --network ethereum
+```
